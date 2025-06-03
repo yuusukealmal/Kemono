@@ -1,4 +1,5 @@
 import os
+import time
 import requests
 from mimetypes import guess_type
 
@@ -55,5 +56,14 @@ class Post:
             print(f"Downloading {file['name']}")
             base = IMG_BASE if is_image(file) else ATTACHMENT_BASE
             url = f"{base}{file['path']}"
-            with open(os.path.join(path, file["name"]), "wb") as f:
-                f.write(requests.get(url).content)
+            filepath = os.path.join(path, file["name"])
+            if is_image(file):
+                with open(os.path.join(path, file["name"]), "wb") as f:
+                    f.write(requests.get(url).content)
+            else:
+                with requests.get(url, stream=True, timeout=10) as r:
+                    r.raise_for_status()
+                    with open(filepath, "wb") as f:
+                        for chunk in r.iter_content(chunk_size=1024):
+                            if chunk:
+                                f.write(chunk)
