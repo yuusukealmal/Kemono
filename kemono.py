@@ -1,5 +1,4 @@
 import os
-import time
 import requests
 from mimetypes import guess_type
 
