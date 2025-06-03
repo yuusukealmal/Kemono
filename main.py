@@ -19,11 +19,11 @@ def main(arg):
     if not target:
         print("Creator not found")
         return
-    os.makedirs(name, exist_ok=True)
+    os.makedirs(target["name"], exist_ok=True)
     posts = Creator(**target).get_posts()
     for p in posts:
         post = Post(**p)
-        path = os.path.join(name, str(post.id))
+        path = os.path.join(target["name"], str(post.id))
         os.makedirs(path, exist_ok=True)
         post.download(path)
 
